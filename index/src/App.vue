@@ -14,7 +14,8 @@ export default {
   * {
     box-sizing: border-box;
   }
-  html, body {
-    overflow: hidden;
+  html,body {
+    overflow:hidden;
+    overflow-y:hidden;
   }
 </style>

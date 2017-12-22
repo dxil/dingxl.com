@@ -10,7 +10,7 @@
         <div class="sec cssNeedle" :style="{transform: 'rotateZ('+sec+'deg)'}"></div>
       </div>
     </div>
-    <p class="content">你{{liveDate.fullYear}}岁了</p>
+    <p class="content">你今年{{liveDate.fullYear}}岁了</p>
     <ul class="flex info">
       <li><p>{{liveDate.year}}</p><p>年</p></li>
       <li><p>{{liveDate.month}}</p><p>月</p></li>
@@ -217,7 +217,7 @@
   }
 
   .user {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     right: 0;
   }
