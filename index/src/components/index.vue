@@ -11,7 +11,7 @@
       </div>
     </div>
     <p class="content">你{{liveDate.fullYear}}岁了</p>
-    <ul class="flex">
+    <ul class="flex info">
       <li><p>{{liveDate.year}}</p><p>年</p></li>
       <li><p>{{liveDate.month}}</p><p>月</p></li>
       <li><p>{{liveDate.day}}</p><p>天</p></li>
@@ -222,6 +222,9 @@
     right: 0;
   }
 
+  .info {
+    margin-bottom: 50px;
+  }
   @media (max-width: 768px) {
     .clock {
       height: 9.333333rem;
@@ -264,6 +267,10 @@
       width: .053333rem;
       height: 4rem;
       margin-left: -1px;
+    }
+
+    .info {
+      margin-bottom: 1.333333rem;
     }
 
   }
