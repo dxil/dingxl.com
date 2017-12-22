@@ -1,42 +1,84 @@
 <template>
-  <div class="cssClock">
-    <div class="cssDotWrap">
-      <div class="cssDot" v-for="(dot,i) in 60" :style="{transform: 'rotateZ('+i*6+'deg)',height: i%5==0?'10px':'4px',}"></div>
+  <div>
+    <div class="clock">
+      <div class="cssClock">
+        <div class="cssDotWrap">
+          <div class="cssDot" v-for="(dot,i) in 60" :style="{transform: 'rotateZ('+i*6+'deg)',height: i%5==0?'10px':'4px',}"></div>
+        </div>
+        <div class="hour cssNeedle" :style="{transform: 'rotateZ('+hour+'deg)'}"></div>
+        <div class="min cssNeedle" :style="{transform: 'rotateZ('+min+'deg)'}"></div>
+        <div class="sec cssNeedle" :style="{transform: 'rotateZ('+sec+'deg)'}"></div>
+      </div>
     </div>
-    <div class="hour cssNeedle" :style="{transform: 'rotateZ('+hour+'deg)'}"></div>
-    <div class="min cssNeedle" :style="{transform: 'rotateZ('+min+'deg)'}"></div>
-    <div class="sec cssNeedle" :style="{transform: 'rotateZ('+sec+'deg)'}"></div>
+    <span>你{{liveDate.fullYear}}岁了</span>
+    <ul class="flex">
+      <li><span>{{liveDate.year}}</span>年</li>
+      <li><span>{{liveDate.month}}</span>月</li>
+      <li><span>{{liveDate.day}}</span>天</li>
+      <li><span>{{liveDate.week}}</span>周</li>
+      <li><span>{{liveDate.hour}}</span>小时</li>
+      <li><span>{{liveDate.min}}</span>分钟</li>
+    </ul>
   </div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      currTime: new Date()//当前日期对象
-    }
-  },
-  computed: {
-    sec() {//将当前秒数转化为秒针旋转的度数
-      return this.currTime.getSeconds()*6;
+  import moment from 'moment'
+  export default {
+    data() {
+      return {
+        currTime: new Date(), //当前日期对象
+        bornYear: '1995',
+        bornMonth: '04',
+        bornDay: '17'
+      }
     },
-    min() {//将当前的分钟数转化为分针旋转的度数
-      return this.currTime.getMinutes()*6 + this.currTime.getSeconds()/10 ;
+    computed: {
+      sec() {//将当前秒数转化为秒针旋转的度数
+        return this.currTime.getSeconds()*6;
+      },
+      min() {//将当前的分钟数转化为分针旋转的度数
+        return this.currTime.getMinutes()*6 + this.currTime.getSeconds()/10 ;
+      },
+      hour() {//将当前的小时数转化为时针旋转的度数
+        return this.currTime.getHours()*30 + this.currTime.getMinutes()/2;
+      },
+      liveDate() {
+        let date = `${this.bornYear}${this.bornMonth}${this.bornDay}`
+        let time = moment(this.currTime).diff(moment(date), 'milliseconds');
+  //      let monthTime =
+        let fullYear = time / 31536000000
+        let years = moment(this.currTime).diff(moment(date), 'years');
+        let month = moment(this.currTime).diff(moment(date), 'month');
+        let days = moment(this.currTime).diff(moment(date), 'days');
+        let week = moment(this.currTime).diff(moment(date), 'week');
+        let hour = moment(this.currTime).diff(moment(date), 'hours');
+        let mins = moment(this.currTime).diff(moment(date), 'minutes');
+        return {
+          fullYear: fullYear,
+          year: years,
+          month: month,
+          day: days,
+          week: week,
+          hour: hour,
+          min: mins,
+        }
+        return fullYear
+      }
     },
-    hour() {//将当前的小时数转化为时针旋转的度数
-      return this. currTime.getHours()*30 + this.currTime.getMinutes()/2;
+    created() {
+      setInterval(()=>{//钩子函数，在实例创建的时候运行定时器，我们只需要动态刷新当前的日期对象即可
+        this.currTime = new Date();
+      },1000)
     }
-  },
-  created() {
-    setInterval(()=>{//钩子函数，在实例创建的时候运行定时器，我们只需要动态刷新当前的日期对象即可
-      this.currTime = new Date();
-    },1000)
   }
-}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .clock {
+    height: 500px;
+  }
   .cssClock {
     position: absolute;
     margin-left: 50%;
@@ -86,7 +128,20 @@ export default {
     margin-left: -1px;
   }
 
+  .flex {
+    display: flex;
+  }
+
   @media (max-width: 768px) {
+
+    span {
+      font-size: 16px;
+      color: #eee;
+    }
+
+    .clock {
+      height: 9.333333rem;
+    }
     .cssClock {
       margin-top: .666666rem;
       left: -4rem;
@@ -126,6 +181,7 @@ export default {
       height: 4rem;
       margin-left: -1px;
     }
+
   }
 </style>
 
