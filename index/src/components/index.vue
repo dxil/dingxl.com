@@ -10,27 +10,61 @@
         <div class="sec cssNeedle" :style="{transform: 'rotateZ('+sec+'deg)'}"></div>
       </div>
     </div>
-    <span>你{{liveDate.fullYear}}岁了</span>
+    <p class="content">你{{liveDate.fullYear}}岁了</p>
     <ul class="flex">
-      <li><span>{{liveDate.year}}</span>年</li>
-      <li><span>{{liveDate.month}}</span>月</li>
-      <li><span>{{liveDate.day}}</span>天</li>
-      <li><span>{{liveDate.week}}</span>周</li>
-      <li><span>{{liveDate.hour}}</span>小时</li>
-      <li><span>{{liveDate.min}}</span>分钟</li>
+      <li><p>{{liveDate.year}}</p><p>年</p></li>
+      <li><p>{{liveDate.month}}</p><p>月</p></li>
+      <li><p>{{liveDate.day}}</p><p>天</p></li>
+      <li><p>{{liveDate.week}}</p><p>周</p></li>
+      <li><p>{{liveDate.hour}}</p><p>小时</p></li>
+      <li><p>{{liveDate.min}}</p><p>分钟</p></li>
     </ul>
+    <div class="user">
+      <ul>
+        切换
+        <span @click="change('dxl')">dxl</span>
+        <span @click="change('daughter')">daughter</span>
+        <span @click="selectDate()">其他</span>
+      </ul>
+    </div>
+    <mt-datetime-picker
+      ref="picker"
+      type="date"
+      year-format="{value} 年"
+      month-format="{value} 月"
+      date-format="{value} 日"
+      :startDate="startDate"
+      :endDate="endDate"
+      v-model="pickerValue"
+      @confirm="changeBorn()">
+    </mt-datetime-picker>
   </div>
 </template>
 
 <script>
   import moment from 'moment'
+  const my = {
+    year: '1995',
+    month: '04',
+    day: '17'
+  }
+  const myDaughter = {
+    year: '1996',
+    month: '08',
+    day: '20'
+  }
   export default {
     data() {
       return {
         currTime: new Date(), //当前日期对象
-        bornYear: '1995',
-        bornMonth: '04',
-        bornDay: '17'
+        born: {
+          year: '1995',
+          month: '04',
+          day: '17'
+        },
+        startDate: new Date('1900-1-1'), // picker选取的起始时间
+        endDate: new Date(),
+        pickerValue: new Date('1990-1-1')
       }
     },
     computed: {
@@ -44,10 +78,10 @@
         return this.currTime.getHours()*30 + this.currTime.getMinutes()/2;
       },
       liveDate() {
-        let date = `${this.bornYear}${this.bornMonth}${this.bornDay}`
+        let date = `${this.born.year}${this.born.month}${this.born.day}`
         let time = moment(this.currTime).diff(moment(date), 'milliseconds');
   //      let monthTime =
-        let fullYear = time / 31536000000
+        let fullYear = (time / 31536000000).toFixed(8)
         let years = moment(this.currTime).diff(moment(date), 'years');
         let month = moment(this.currTime).diff(moment(date), 'month');
         let days = moment(this.currTime).diff(moment(date), 'days');
@@ -70,15 +104,48 @@
       setInterval(()=>{//钩子函数，在实例创建的时候运行定时器，我们只需要动态刷新当前的日期对象即可
         this.currTime = new Date();
       },1000)
+    },
+    mounted () {
+      let person = window.localStorage.getItem('person')
+      this.born = person && person === 'daughter' ? myDaughter : my
+    },
+    methods: {
+      change (name) {
+        window.localStorage.setItem('person', name)
+        if (name === 'dxl') {
+          this.born = my
+          console.log(my)
+          console.log(this.born)
+        }else {
+          this.born = myDaughter
+          console.log(myDaughter)
+          console.log(this.born)
+        }
+      },
+      changeBorn () {
+        console.log(this.pickerValue)
+        this.born.year = moment(this.pickerValue).format('YYYY')
+        this.born.month = moment(this.pickerValue).format('MM')
+        this.born.day = moment(this.pickerValue).format('DD')
+      },
+      selectDate () {
+        this.$refs.picker.open();
+      }
     }
   }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  span, p, ul, li {
+    font-size: 16px;
+    color: #ccc;
+  }
+
   .clock {
     height: 500px;
   }
+
   .cssClock {
     position: absolute;
     margin-left: 50%;
@@ -128,17 +195,34 @@
     margin-left: -1px;
   }
 
+  .content {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
   .flex {
     display: flex;
+    display: -webkit-flex; /* Safari */
+    flex-flow: wrap;
+    justify-content: center;
+  }
+
+  .flex li {
+    text-align: center;
+    width: 100px;
+    height: 80px;
+    padding-top: 20px;
+    margin: 0 5px 5px 0;
+    border: 1px solid #ccc;
+  }
+
+  .user {
+    position: fixed;
+    bottom: 0;
+    right: 0;
   }
 
   @media (max-width: 768px) {
-
-    span {
-      font-size: 16px;
-      color: #eee;
-    }
-
     .clock {
       height: 9.333333rem;
     }
