@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="height: 100%; position: relative">
     <div class="clock">
       <div class="cssClock">
         <div class="cssDotWrap">
@@ -62,9 +62,9 @@
           month: '04',
           day: '17'
         },
-        startDate: new Date('1900-1-1'), // picker选取的起始时间
+        startDate: new Date(1900,1,1), // picker选取的起始时间
         endDate: new Date(),
-        pickerValue: new Date('1990-1-1')
+        pickerValue: new Date(1990,1,1)
       }
     },
     computed: {
@@ -107,17 +107,18 @@
     },
     mounted () {
       let person = window.localStorage.getItem('person')
-      this.born = person && person === 'daughter' ? myDaughter : my
+      this.born = person && person === 'daughter' ? this.getObj(myDaughter) :this.getObj(my)
     },
     methods: {
       change (name) {
         window.localStorage.setItem('person', name)
+        console.log('person', name)
         if (name === 'dxl') {
-          this.born = my
+          this.born = this.getObj(my)
           console.log(my)
           console.log(this.born)
         }else {
-          this.born = myDaughter
+          this.born = this.getObj(myDaughter)
           console.log(myDaughter)
           console.log(this.born)
         }
@@ -130,6 +131,9 @@
       },
       selectDate () {
         this.$refs.picker.open();
+      },
+      getObj (obj) {
+        return JSON.parse(JSON.stringify(obj))
       }
     }
   }
@@ -212,18 +216,19 @@
     width: 100px;
     height: 80px;
     padding-top: 20px;
-    margin: 0 5px 5px 0;
+    margin: 0 10px 5px 0;
     border: 1px solid #ccc;
   }
 
   .user {
     position: absolute;
     bottom: 0;
-    right: 0;
+    right: 10px;
   }
 
   .info {
     margin-bottom: 50px;
+    min-height: 200px;
   }
   @media (max-width: 768px) {
     .clock {
