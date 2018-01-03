@@ -14,14 +14,14 @@ document.body.appendChild(div)
 
 缺点：
 
-1. 频繁对dom进行访问/操作，性能变差
+1. 频繁对 *dom* 进行访问/操作，性能变差
 2. 每次的更改比较麻烦
 
 
 
 ### 2、Micro-Templating
 
-为了解决这种麻烦的操作方式，jQuery的作者 [John Resig] 写了一个小型的[Micro-Templating](https://johnresig.com/blog/javascript-micro-templating/)
+为了解决这种麻烦的操作方式，*jQuery* 的作者 [ *John Resig* ] 写了一个小型的[Micro-Templating](https://johnresig.com/blog/javascript-micro-templating/)
 
 模板的使用语法:
 
@@ -115,9 +115,9 @@ document.body.appendChild(div)
 
 
 
-**2.2.1 主要知识点：**
+**2.1.1 主要知识点：**
 
-1. [new Function](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function): 用于创建一个将模板解析成html字符串并且结合 *data* 的函数  *fn*，通过  *fn(data)*  传入模板中用到的全局 *data*。
+1. [new Function](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Function): 用于创建一个将模板解析成 *html* 字符串并且结合 *data* 的函数  *fn*，通过  *fn(data)*  传入模板中用到的全局 *data*。
 
 
 1. [with](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/with): 传入的 *data* 作为函数体中 *obj* 的变量取值，也可声明一个临时变量来存值，达到一样的效果。
@@ -125,7 +125,7 @@ document.body.appendChild(div)
 
 1. 正则表达式对字符串进行切割 如识别到模板语法中的 *<%* 替换成 *\t*
 
-**2.2.2 存在的问题：**
+**2.1.2 存在的问题：**
 
 1. 代码调试痛苦，不方便定位问题
 
@@ -137,5 +137,61 @@ document.body.appendChild(div)
 
 > Vue的使用非常的简单，根据官方文档可以快速的入门，但是本着不能只知道如何使用，而不知道是如何起作用的原则，了解一下Vue的实现机制
 
-**3.1 Vue核心执行过程图**
+#### 3.1 Vue核心执行过程图
+
+![Vue执行图](./index/static/imgs/vue原理.jpg)
+
+可以看出在拿到模板后首先要编译模板，生成  *AST* ( *Abstract Syntax Tree* ) 抽象对象树，即源代码的抽象语法树的结构的表示，并不会表示出具体的代码实现细节，也不依赖于源代码的语法，树上的每个节点映射出源代码中的一种结构
+
+> **什么是抽象语法树**
+> 抽象语法树(Abstract Syntax Tree) 是源代码语法结构的抽象表示，并以树这种数据结构进行描述。AST 属编译原理范畴，有比较成熟的理论基础，因此被广泛运用在对各种程序语言（JavaScript, C, Java, Python等等）的编译处理中。Vue 同样也是使用 AST 作为中间形式完成对 html 模板的编译。
+
+在继续Vue原理之前，需要先了解 *AST* 构建的一般过程
+
+**3.1.1 AST 示例**
+
+比如：
+
+```javascript
+let a = 1;
+```
+
+生成的 *AST* 格式如下:
+
+```javascript
+{
+    type: "Program",
+    body: [
+        {
+            type: "VariableDeclaration",
+            declarations: [
+                {
+                    type: "VariableDeclarator",
+                    id: {
+                        type: "Identifier",
+                        name: "a"
+                    },
+                    init: {
+                        type: "Literal",
+                        value: 1,
+                        raw: "1"
+                    }
+                }
+            ],
+            kind: "let"
+        }
+    ],
+    sourceType: "script"
+}
+```
+
+*AST* 图形预览:
+
+![AST图形](./index/static/imgs/AST.png)
+
+[在线生成 *AST* 结构工具](http://astexplorer.net/)                 [在线生成 *AST* 图形工具](http://resources.jointjs.com/demos/javascript-ast)
+
+
+
+**3.1.2 Vue中AST的实现**
 
