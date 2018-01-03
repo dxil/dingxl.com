@@ -45,3 +45,9 @@ html字符串并且结合data的函数fn，通过 *fn(data)* 传入模板中用�
 2. [with](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/with): 传入的data作为函数体中obj的变量取值，也可声
 明一个临时变量来存值，达到一样的效果
 3. 正则表达式对字符串进行切割 如识别到模板语法中的 *<%* 替换成\t
+
+**存在的问题：**
+1. 代码调试痛苦，不方便定位问题
+2. 无法将数据与状态绑定，每次数据的更改需要更新整个视图层
+
+## Vue的模板实现学习
