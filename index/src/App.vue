@@ -16,7 +16,7 @@ export default {
   }
   html,body {
     overflow:hidden;
-    overflow-y:hidden;
+    overflow-y:auto;
   }
   #app {
     height: 100%;
