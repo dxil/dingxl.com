@@ -1,0 +1,48 @@
+<html>
+  <div id="el">
+    <anchored-heading :level="1"><b>Hello world!</b>sss</anchored-heading>
+  </div>
+
+  <script src="./vue.js"></script>
+  <script>
+    var getChildrenTextContent = function (children) {
+      return children.map(function (node) {
+        return node.children
+          ? getChildrenTextContent(node.children)
+          : node.text
+      }).join('')
+    }
+    Vue.component('anchored-heading', {
+      render: function (createElement) {
+        // create kebabCase id
+        var headingId = getChildrenTextContent(this.$slots.default)
+          .toLowerCase()
+          .replace(/\W+/g, '-')
+          .replace(/(^\-|\-$)/g, '')
+        console.log(createElement)
+        return createElement(
+          'h' + this.level,
+          [
+            createElement('a', {
+              attrs: {
+                name: headingId,
+                href: '#' + headingId
+              }
+            }, this.$slots.default),
+            createElement('b','123')
+          ]
+        )
+      },
+      props: {
+        level: {
+          type: Number,
+          required: true
+        }
+      }
+    })
+    var vm = new Vue({
+      el: '#el'
+    });
+  </script>
+
+</html>
