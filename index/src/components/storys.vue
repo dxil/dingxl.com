@@ -3,7 +3,7 @@
     <el-main>
       <el-row type="flex" justify="space-between">
         <el-col :span="12">
-          <el-button size="mini" round>设置</el-button>
+          <el-button size="mini" round @click="setting(true)">设置</el-button>
         </el-col>
         <el-col :span="12">
           <el-select size="mini" class="el-icon--right" v-model="index" filterable placeholder="请选择" @change="changeChapter">
@@ -34,6 +34,33 @@
 
       </el-row>
     </el-footer>
+    <mt-popup
+      v-model="popupVisible"
+      position="left"
+      closeOnClickModal="false"
+      modal=false
+      style="width: 100%;height: 100%"
+      :style="fontStyle"
+    >
+      <el-container>
+        <el-main>
+          <mt-switch v-model="settings.night">夜间模式</mt-switch>
+          <mt-switch v-model="settings.isProtectEye">护眼模式</mt-switch>
+          <mt-range v-model="settings.fontSize"
+                    :min="14"
+                    :max="22"
+          >
+            <div slot="start">14</div>
+            <div slot="end">22</div>
+          </mt-range>
+        </el-main>
+        <el-footer>
+          <el-button size="mini" plain @click="setting(false)">关闭设置</el-button>
+        </el-footer>
+      </el-container>
+
+
+    </mt-popup>
   </el-container>
 </template>
 
@@ -55,6 +82,7 @@
         storys: [],
         index: '',
         body: '',
+        popupVisible: false,
         settings: {
           fontSize: 14,
           isProtectEye: false,
@@ -128,13 +156,16 @@
         })
 
       },
-      go(i) {
+      go (i) {
         let sum = +this.index + i
         console.log(sum)
         if ( sum > 0) {
           this.changeChapter(sum)
         }
 
+      },
+      setting (boolean) {
+        this.popupVisible = boolean
       }
     }
   }
@@ -144,8 +175,5 @@
   .storys {
     overflow-x: hidden;
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-  }
-  .el-main {
-    width: 10rem;
   }
 </style>
