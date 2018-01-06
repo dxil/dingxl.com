@@ -57,6 +57,9 @@
       search () {
         this.reset()
         spinner.open()
+        if (!this.searchValue) {
+          return;
+        }
         storys.searchBook(this.searchValue).then(res => {
           spinner.close()
           if (!res) {
