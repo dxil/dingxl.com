@@ -12,6 +12,16 @@ Vue.config.productionTip = false;
 Vue.use(Mint);
 Vue.use(ElementUI);
 
+router.beforeEach(({ meta, path }, from, next) => {
+  let { auth = true } = meta;
+  // var isLogin = Boolean(sessionStorage.getItem('token'))
+  var isLogin = true;
+  if (auth && !isLogin && path !== '/login') {
+    return next({ path: '/login' });
+  }
+  next();
+});
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

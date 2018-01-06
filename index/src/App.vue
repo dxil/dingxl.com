@@ -17,8 +17,10 @@ export default {
   html,body {
     overflow:hidden;
     overflow-y:auto;
+    height: 100%;
   }
   #app {
     height: 100%;
+    background-color: #f5f5f5;
   }
 </style>
