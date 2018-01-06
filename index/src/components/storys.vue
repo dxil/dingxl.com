@@ -49,8 +49,9 @@
           <mt-range v-model="settings.fontSize"
                     :min="14"
                     :max="22"
+                    style="margin-top: 0.7rem;"
           >
-            <div slot="start">14</div>
+            <div slot="start">字体:   14</div>
             <div slot="end">22</div>
           </mt-range>
         </el-main>
@@ -58,7 +59,6 @@
           <el-button size="mini" plain @click="setting(false)">关闭设置</el-button>
         </el-footer>
       </el-container>
-
 
     </mt-popup>
   </el-container>
@@ -173,6 +173,7 @@
 
 <style>
   .storys {
+    height: 100%;
     overflow-x: hidden;
     font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   }
