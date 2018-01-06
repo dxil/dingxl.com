@@ -9,8 +9,8 @@
           <el-select size="mini" class="el-icon--right" v-model="index" filterable placeholder="请选择" @change="changeChapter">
             <el-option
               v-for="(item, index) in storys"
-              :key="item.link"
-              :label="item.title"
+              :key="item.id"
+              :label="item.name"
               :value="index"
             >
             </el-option>
@@ -117,14 +117,24 @@
     },
     methods: {
       init () {
+        let url = this.$route.query.url
+        if (!url) {
+          Toast({
+            message: '请搜索后再查看！',
+            position: 'center',
+            duration: 2000
+          });
+          return;
+        }
         spinner.open()
-        storys.getChapters().then(res => {
-//          let arr = [];
-//          res.mixToc.chapters.forEach(_arr => {
-//            arr = arr.concat(_arr)
-//          })
+        storys.getChapters(url).then(res => {
+          let arr = [];
+          eval('res='+res)
+          res.data.list.forEach(_arr => {
+            arr = arr.concat(_arr.list)
+          })
           spinner.close()
-          this.storys = res.mixToc.chapters
+          this.storys = arr
         }).catch(e => {
           spinner.close()
           console.log(e)
@@ -132,17 +142,17 @@
       },
       changeChapter (item) {
         this.index = item
-        let _link = this.storys[item].link
+        let _link = this.$route.query.url + this.storys[item].id + '.html'
         MessageBox.confirm('叔叔是不是很帅?').then(action => {
           spinner.open()
-          storys.getDetailByLink(encodeURIComponent(_link)).then(res => {
+          storys.getDetailByLink(_link).then(res => {
             spinner.close()
             Toast({
               message: '叔叔真的帅',
               position: 'center',
               duration: 2000
             });
-            this.body = res.chapter.body
+            this.body = res.data.content
           }).catch(e => {
             spinner.close()
             console.log(e)
