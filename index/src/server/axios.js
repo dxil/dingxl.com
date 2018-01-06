@@ -13,6 +13,7 @@ axios.defaults.baseURL = baseUrl;
 // });
 
 export const Axios = async(type = 'get', url = '', data = {}, headers = {
+  'content-type': 'application/json'
 }) => {
   let config = {
     method: type,

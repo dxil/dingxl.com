@@ -12,15 +12,23 @@ params['price_change']="0.02";
 app.use(bodyParser.json({ type: 'application/json' }));
 
 app.get('/api/storys/chapters', function (req, res) {
-  var bid = req.query.bid
-  req.pipe(http.get(`http://api.zhuishushenqi.com/mix-atoc/${bid}?view=chapters`, function(response) {
+  var url = req.query.url
+  console.log(url)
+  req.pipe(http.get(`${url}`, function(response) {
+    response.setEncoding('utf8');
     response.pipe(res)
   }))
 })
 
 app.get('/api/storys/detail', function (req, res) {
-  var link = encodeURIComponent(req.query.link)
-  req.pipe(http.get(`http://chapter2.zhuishushenqi.com/chapter/${link}?k=2124b73d7e2e1945&t=1468223717`, function(response) {
+  var url = req.query.url
+  req.pipe(http.get(`${url}`, function(response) {
+    response.pipe(res)
+  }))
+});
+app.get('/api/storys/search', function (req, res) {
+  var query = req.query.q
+  req.pipe(http.get(`http://zhannei.baidu.com/cse/search?q=${encodeURIComponent(query)}&click=1&s=5541116575338011306&nsid=`, function(response) {
     response.pipe(res)
   }))
 })
