@@ -1,4 +1,7 @@
 import axios from 'axios'
+import {baseUrl} from '../config'
+
+axios.defaults.baseURL = baseUrl;
 
 // axios.interceptors.response.use(function(response){
 //   //对响应数据做些事

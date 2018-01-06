@@ -1,32 +1,87 @@
 <template>
-  <el-container class="storys">
+  <el-container class="storys" :style="fontStyle">
     <el-main>
-      <el-select v-model="link" filterable placeholder="请选择" @change="changeChapter">
-        <el-option
-          v-for="item in storys"
-          :key="item.link"
-          :label="item.title"
-          :value="item.link"
-        >
-        </el-option>
-      </el-select>
+      <el-row type="flex" justify="space-between">
+        <el-col :span="12">
+          <el-button size="mini" round>设置</el-button>
+        </el-col>
+        <el-col :span="12">
+          <el-select size="mini" class="el-icon--right" v-model="index" filterable placeholder="请选择" @change="changeChapter">
+            <el-option
+              v-for="(item, index) in storys"
+              :key="item.link"
+              :label="item.title"
+              :value="index"
+            >
+            </el-option>
+          </el-select>
+        </el-col>
+
+      </el-row>
+
       <div class="detail" style="white-space: pre-wrap;">
         {{body}}
       </div>
     </el-main>
+    <el-footer>
+      <el-row type="flex" justify="space-between" v-show="body">
+        <el-col :span="12" style="text-align: center;">
+          <el-button icon="el-icon-arrow-left" size="mini" @click="go(-1)">上一章</el-button>
+        </el-col>
+        <el-col :span="12" style="text-align: center;">
+          <el-button size="mini" @click="go(1)">下一章<i class="el-icon-arrow-right el-icon--right"></i></el-button>
+        </el-col>
+
+      </el-row>
+    </el-footer>
   </el-container>
 </template>
 
 <script>
   import {storys} from '../server'
-  import { Toast, MessageBox } from 'mint-ui'
+  import { Toast, MessageBox, Indicator } from 'mint-ui'
 
+  const spinner = {
+    open: () => Indicator.open({
+      text: '叔叔帅...',
+      spinnerType: 'fading-circle'
+    }),
+    close: () => Indicator.close()
+
+  }
   export default {
     data() {
       return {
         storys: [],
-        link: '',
-        body: ''
+        index: '',
+        body: '',
+        settings: {
+          fontSize: 14,
+          isProtectEye: false,
+          night: true
+        }
+      }
+    },
+    computed: {
+      fontStyle () {
+        let _backgroundColor
+        let _color = '#000'
+        if (!this.body) {
+          _backgroundColor = '#fff'
+        }else {
+          if (!this.settings.night) {
+            _backgroundColor = this.settings.isProtectEye? 'rgb(241,229,201)':'#eee'
+          }else {
+            _backgroundColor = '#333333'
+            _color = '#DADADA'
+          }
+        }
+
+        return {
+          fontSize: this.settings.fontSize + 'px',
+          backgroundColor: _backgroundColor,
+          color: _color
+        }
       }
     },
     mounted () {
@@ -34,31 +89,51 @@
     },
     methods: {
       init () {
+        spinner.open()
         storys.getChapters().then(res => {
-          console.log(res)
 //          let arr = [];
 //          res.mixToc.chapters.forEach(_arr => {
 //            arr = arr.concat(_arr)
 //          })
+          spinner.close()
           this.storys = res.mixToc.chapters
         }).catch(e => {
+          spinner.close()
           console.log(e)
         })
       },
       changeChapter (item) {
+        this.index = item
+        let _link = this.storys[item].link
         MessageBox.confirm('叔叔是不是很帅?').then(action => {
-          storys.getDetailByLink(encodeURIComponent(item)).then(res => {
-            console.log(res)
-            this.body = res.chapter.body
+          spinner.open()
+          storys.getDetailByLink(encodeURIComponent(_link)).then(res => {
+            spinner.close()
             Toast({
               message: '叔叔真的帅',
               position: 'center',
               duration: 2000
             });
+            this.body = res.chapter.body
           }).catch(e => {
+            spinner.close()
             console.log(e)
           })
+        }).catch(e => {
+          Toast({
+            message: '叔叔不帅还看什么小说？',
+            position: 'center',
+            duration: 2000
+          });
         })
+
+      },
+      go(i) {
+        let sum = +this.index + i
+        console.log(sum)
+        if ( sum > 0) {
+          this.changeChapter(sum)
+        }
 
       }
     }
@@ -68,7 +143,7 @@
 <style>
   .storys {
     overflow-x: hidden;
-    font-size: 14px;
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
   }
   .el-main {
     width: 10rem;
