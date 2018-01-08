@@ -1,13 +1,13 @@
 <template>
   <div>
-    <el-container>
+    <el-container v-if="isShow">
       <el-main>
         <el-input placeholder="请输入内容" v-model="searchValue" class="input-with-select">
           <el-button slot="append" icon="el-icon-search" @click="search()"></el-button>
         </el-input>
       </el-main>
     </el-container>
-    <el-container>
+    <el-container v-if="isShow">
       <el-main>
         <!--<el-row type="flex" class="row-bg" justify="space-between">-->
           <!--<el-col :span="5" class="list" v-for="list in lists" :key="list.name">-->
@@ -19,6 +19,12 @@
         <!--</el-row>-->
         <router-link v-show="name" :to="{ path: 'storys', query: { url: url }}">{{name}}</router-link>
         <p v-show="errMsg">{{errMsg}}</p>
+      </el-main>
+    </el-container>
+    <el-container  v-if="!isShow">
+      <el-main>
+        <p>周一到周五不能看，周六周日才能看</p>
+        <p>好好学习，天天向上</p>
       </el-main>
     </el-container>
   </div>
@@ -42,6 +48,7 @@
         searchValue: '',
 //        lists: []，
         url: '',
+        isShow: false,
         name: ''
       }
     },
@@ -52,7 +59,12 @@
     },
     methods: {
       init () {
-
+        const day = new Date().getDay()
+        if (day === 0 || day === 6) {
+          return true
+        }else {
+          return false
+        }
       },
       search () {
         this.reset()
