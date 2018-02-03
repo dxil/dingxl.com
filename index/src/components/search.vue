@@ -64,7 +64,7 @@
         if (day === 0 || day === 6) {
           this.isShow = true
         }else {
-          this.isShow = false
+          this.isShow = true
         }
       },
       search () {
