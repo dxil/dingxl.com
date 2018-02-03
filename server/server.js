@@ -23,12 +23,14 @@ app.get('/api/storys/chapters', function (req, res) {
 app.get('/api/storys/detail', function (req, res) {
   var url = req.query.url
   req.pipe(http.get(`${url}`, function(response) {
+    response.setEncoding('utf8');
     response.pipe(res)
   }))
 });
 app.get('/api/storys/search', function (req, res) {
   var query = req.query.q
   req.pipe(http.get(`http://zhannei.baidu.com/cse/search?q=${encodeURIComponent(query)}&click=1&s=5541116575338011306&nsid=`, function(response) {
+    response.setEncoding('utf8');
     response.pipe(res)
   }))
 })

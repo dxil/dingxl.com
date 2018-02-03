@@ -70,7 +70,7 @@
 
   const spinner = {
     open: () => Indicator.open({
-      text: '叔叔帅...',
+      text: '舅舅帅...',
       spinnerType: 'fading-circle'
     }),
     close: () => Indicator.close()
@@ -143,12 +143,12 @@
       changeChapter (item) {
         this.index = item
         let _link = this.$route.query.url + this.storys[item].id + '.html'
-        MessageBox.confirm('叔叔是不是很帅?').then(action => {
+        MessageBox.confirm('舅舅是不是很帅?').then(action => {
           spinner.open()
           storys.getDetailByLink(_link).then(res => {
             spinner.close()
             Toast({
-              message: '叔叔真的帅',
+              message: '舅舅真的帅',
               position: 'center',
               duration: 2000
             });
@@ -159,7 +159,7 @@
           })
         }).catch(e => {
           Toast({
-            message: '叔叔不帅还看什么小说？',
+            message: '舅舅不帅还看什么小说？',
             position: 'center',
             duration: 2000
           });
