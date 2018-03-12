@@ -4,6 +4,7 @@ import Index from '@/components/index'
 import Story from '@/components/storys'
 import Login from '@/components/login'
 import Search from '@/components/search'
+import Lists from '@/components/lists'
 
 Vue.use(Router);
 export default new Router({
@@ -27,6 +28,11 @@ export default new Router({
       path: '/search',
       name: 'search',
       component: Search
+    },
+    {
+      path: '/lists',
+      name: 'Lists',
+      component: Lists
     }
   ]
 })
