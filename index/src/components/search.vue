@@ -36,7 +36,7 @@
 
   const spinner = {
     open: () => Indicator.open({
-      text: '叔叔帅...',
+      text: '舅舅帅...',
       spinnerType: 'fading-circle'
     }),
     close: () => Indicator.close()
@@ -49,6 +49,7 @@
 //        lists: []，
         url: '',
         isShow: false,
+        errMsg: '',
         name: ''
       }
     },
@@ -61,9 +62,9 @@
       init () {
         const day = new Date().getDay()
         if (day === 0 || day === 6) {
-          return true
+          this.isShow = true
         }else {
-          return false
+          this.isShow = true
         }
       },
       search () {
@@ -79,7 +80,7 @@
           }
           const info = res.match(/<a cpos=\"title\" href=\"(.*)\" title=\"(.*)\" class=\"result-game-item-title-link\" target=\"_blank\">/)
           if (!info.length) {
-            this.errMsg = '未找到该书啊，肖宇豪'
+            this.errMsg = '未找到该书啊，张俊'
           }else {
             this.url = info[1]
             this.name = info[2]
